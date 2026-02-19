@@ -1,7 +1,9 @@
 ; -*- lexical-binding: t -*-
 
 (package "space-tree"
+; x-release-please-start-version
          "0.1.0"
+; x-release-please-end
          "Tree-based workspace management")
 
 (website-url "https://github.com/chiply/space-tree")
@@ -15,7 +17,7 @@
 (source "gnu")
 (source "melpa")
 
-(depends-on "emacs" "29.1")
+(depends-on "emacs" "28.1")
 (depends-on "ht" "2.3")
 (depends-on "dash" "2.19")
 

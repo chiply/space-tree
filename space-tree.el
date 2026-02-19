@@ -5,8 +5,10 @@
 ;; Author: Charlie Holland <mister.chiply@gmail.com>
 ;; Maintainer: Charlie Holland <mister.chiply@gmail.com>
 ;; URL: https://github.com/chiply/space-tree
+;; x-release-please-start-version
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "29.1") (ht "2.3") (dash "2.19"))
+;; x-release-please-end
+;; Package-Requires: ((emacs "28.1") (ht "2.3") (dash "2.19"))
 ;; Keywords: convenience, frames
 
 ;;; Commentary:
@@ -238,7 +240,8 @@ SPACES-THIS-LEVEL-HT is the hashtable of spaces at this level."
                    (propertize (concat space-name-or-number "' ") 'face 'bold)
                  (concat space-name-or-number " "))
                )))
-   (sort (ht-keys spaces-this-level-ht) (lambda (a b) (< a b)))))
+   (sort (ht-keys spaces-this-level-ht) (lambda (a b) (< a b)))
+   ""))
 
 (defun space-tree-modeline-lighter ()
   "Return a string to be used as the modeline lighter for space-tree.
