@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Nix store
+      - name: Cache Nix store  # setup-emacs uses Nix on Linux
         if: runner.os != 'Windows'
         uses: DeterminateSystems/magic-nix-cache-action@main
 
@@ -50,7 +50,10 @@ jobs:
           key: eask-${{ runner.os }}-${{ matrix.emacs-version }}-${{ hashFiles('Eask') }}
 
       - name: Install dependencies
-        run: eask install-deps
+        shell: bash
+        run: |
+          rc=0; eask install-deps || rc=$?
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then exit $rc; fi  # 2 = no deps
 
       - name: Byte compile
         run: eask compile
@@ -63,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Nix store
+      - name: Cache Nix store  # setup-emacs uses Nix on Linux
         uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Set up Emacs
@@ -83,7 +86,10 @@ jobs:
           key: eask-lint-${{ hashFiles('Eask') }}
 
       - name: Install dependencies
-        run: eask install-deps
+        shell: bash
+        run: |
+          rc=0; eask install-deps || rc=$?
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then exit $rc; fi  # 2 = no deps
 
       - name: Package lint
         run: eask lint package
