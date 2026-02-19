@@ -10,7 +10,7 @@
 (package-file "space-tree.el")
 (files "*.el")
 
-(script "test" "echo \"No tests yet\"")
+(script "test" "eask test ert test/space-tree-test.el")
 
 (source "gnu")
 (source "melpa")

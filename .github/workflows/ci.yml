@@ -39,6 +39,9 @@ jobs:
       - name: Byte compile
         run: eask compile
 
+      - name: Run tests
+        run: eask test ert test/space-tree-test.el
+
       - name: Package lint
         run: eask lint package
         continue-on-error: true
