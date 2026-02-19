@@ -1,0 +1,24 @@
+name: Auto-merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'chiply'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approve PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr review "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --approve
+
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr merge "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --auto --squash
