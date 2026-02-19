@@ -13,28 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@v4
-        id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-
-      - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
-
-      - name: Update version in Elisp files
-        if: ${{ steps.release.outputs.release_created }}
-        run: |
-          VERSION="${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}"
-          for file in *.el; do
-            sed -i "s/;; Version: .*/;; Version: ${VERSION}/" "$file"
-          done
-          sed -i "s/\"[0-9]*\.[0-9]*\.[0-9]*\"/\"${VERSION}\"/" Eask
-
-      - name: Commit version bump
-        if: ${{ steps.release.outputs.release_created }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --staged --quiet || git commit -m "chore: bump version to ${{ steps.release.outputs.tag_name }}"
-          git push
