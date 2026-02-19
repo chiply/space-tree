@@ -1,6 +1,6 @@
 # space-tree
 
-Tree-based workspace management for Emacs.
+Tree-based workspace management for Emacs. Supports Emacs 28.1+.
 
 ## Overview
 
