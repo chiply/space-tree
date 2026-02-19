@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -25,6 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Nix store
+        if: runner.os != 'Windows'
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
       - name: Set up Emacs
         uses: jcs090218/setup-emacs@master
         with:
@@ -35,6 +43,12 @@ jobs:
         with:
           version: 'snapshot'
 
+      - name: Cache Eask dependencies
+        uses: actions/cache@v4
+        with:
+          path: .eask
+          key: eask-${{ runner.os }}-${{ matrix.emacs-version }}-${{ hashFiles('Eask') }}
+
       - name: Install dependencies
         run: eask install-deps
 
@@ -43,6 +57,33 @@ jobs:
 
       - name: Run tests
         run: eask test ert test/space-tree-test.el
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Nix store
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Set up Emacs
+        uses: jcs090218/setup-emacs@master
+        with:
+          version: 29.4
+
+      - name: Set up Eask
+        uses: emacs-eask/setup-eask@master
+        with:
+          version: 'snapshot'
+
+      - name: Cache Eask dependencies
+        uses: actions/cache@v4
+        with:
+          path: .eask
+          key: eask-lint-${{ hashFiles('Eask') }}
+
+      - name: Install dependencies
+        run: eask install-deps
 
       - name: Package lint
         run: eask lint package
