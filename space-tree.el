@@ -8,7 +8,7 @@
 ;; x-release-please-start-version
 ;; Version: 0.1.0
 ;; x-release-please-end
-;; Package-Requires: ((emacs "29.1") (ht "2.3") (dash "2.19"))
+;; Package-Requires: ((emacs "28.1") (ht "2.3") (dash "2.19"))
 ;; Keywords: convenience, frames
 
 ;;; Commentary:

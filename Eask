@@ -17,7 +17,7 @@
 (source "gnu")
 (source "melpa")
 
-(depends-on "emacs" "29.1")
+(depends-on "emacs" "28.1")
 (depends-on "ht" "2.3")
 (depends-on "dash" "2.19")
 
