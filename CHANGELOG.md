@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/chiply/space-tree/compare/v0.1.1...v0.1.2) (2026-02-19)
+
+
+### Bug Fixes
+
+* robust eask install-deps handling and Nix cache comments ([#9](https://github.com/chiply/space-tree/issues/9)) ([ef7c1a1](https://github.com/chiply/space-tree/commit/ef7c1a1363bc695d050bc955e2d2b9e319499df0))
+
 ## [0.1.1](https://github.com/chiply/space-tree/compare/v0.1.0...v0.1.1) (2026-02-19)
 
 

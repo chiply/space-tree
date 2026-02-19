@@ -6,7 +6,7 @@
 ;; Maintainer: Charlie Holland <mister.chiply@gmail.com>
 ;; URL: https://github.com/chiply/space-tree
 ;; x-release-please-start-version
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; x-release-please-end
 ;; Package-Requires: ((emacs "28.1") (ht "2.3") (dash "2.19"))
 ;; Keywords: convenience, frames
