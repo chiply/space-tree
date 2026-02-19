@@ -240,7 +240,8 @@ SPACES-THIS-LEVEL-HT is the hashtable of spaces at this level."
                    (propertize (concat space-name-or-number "' ") 'face 'bold)
                  (concat space-name-or-number " "))
                )))
-   (sort (ht-keys spaces-this-level-ht) (lambda (a b) (< a b)))))
+   (sort (ht-keys spaces-this-level-ht) (lambda (a b) (< a b)))
+   ""))
 
 (defun space-tree-modeline-lighter ()
   "Return a string to be used as the modeline lighter for space-tree.
