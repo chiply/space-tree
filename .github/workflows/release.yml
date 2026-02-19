@@ -6,42 +6,35 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  bump-and-release:
+  release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: googleapis/release-please-action@v4
+        id: release
         with:
-          fetch-depth: 0
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
 
-      - name: Bump version
-        id: bump
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Update version in Elisp files
+        if: ${{ steps.release.outputs.release_created }}
         run: |
-          NEW_VERSION=$(bash scripts/bump-version.sh)
-          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          VERSION="${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}"
+          for file in *.el; do
+            sed -i "s/;; Version: .*/;; Version: ${VERSION}/" "$file"
+          done
+          sed -i "s/\"[0-9]*\.[0-9]*\.[0-9]*\"/\"${VERSION}\"/" Eask
 
-      - name: Commit, tag, and release
-        if: ${{ steps.bump.outputs.new_version != '' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Commit version bump
+        if: ${{ steps.release.outputs.release_created }}
         run: |
-          VERSION="${{ steps.bump.outputs.new_version }}"
-          TAG="v${VERSION}"
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add space-tree.el Eask version.txt .release-please-manifest.json
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit; skipping release."
-            exit 0
-          fi
-
-          git commit -m "chore: bump version to ${TAG}"
-          git tag "$TAG"
-          git pull --rebase origin main
-          git push origin main --tags
-
-          gh release create "$TAG" --generate-notes
+          git add -A
+          git diff --staged --quiet || git commit -m "chore: bump version to ${{ steps.release.outputs.tag_name }}"
+          git push
