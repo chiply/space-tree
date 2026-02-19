@@ -1,7 +1,9 @@
 ; -*- lexical-binding: t -*-
 
 (package "space-tree"
-         "0.1.0" ; x-release-please-version
+; x-release-please-start-version
+         "0.1.0"
+; x-release-please-end
          "Tree-based workspace management")
 
 (website-url "https://github.com/chiply/space-tree")
