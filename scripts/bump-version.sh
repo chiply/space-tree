@@ -8,7 +8,7 @@ ELISP_FILE="$REPO_ROOT/space-tree.el"
 EASK_FILE="$REPO_ROOT/Eask"
 
 # --- Read current version from space-tree.el header ---
-CURRENT_VERSION=$(sed -n 's/^;; Version: \([0-9]*\.[0-9]*\.[0-9]*\)/\1/p' "$ELISP_FILE")
+CURRENT_VERSION=$(sed -n 's/^;; Version: \([0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\)/\1/p' "$ELISP_FILE")
 if [[ -z "$CURRENT_VERSION" ]]; then
   echo "Error: could not read version from $ELISP_FILE" >&2
   exit 1
@@ -21,7 +21,8 @@ LATEST_TAG=$(git -C "$REPO_ROOT" describe --tags --match 'v*' --abbrev=0 2>/dev/
 if [[ -n "$LATEST_TAG" ]]; then
   RANGE="${LATEST_TAG}..HEAD"
 else
-  RANGE="HEAD"
+  ROOT_COMMIT=$(git -C "$REPO_ROOT" rev-list --max-parents=0 HEAD | tail -n 1)
+  RANGE="${ROOT_COMMIT}..HEAD"
 fi
 
 # --- Scan commits for conventional commit prefixes ---
@@ -45,9 +46,9 @@ while IFS= read -r subject; do
   esac
 done < <(git -C "$REPO_ROOT" log --format='%s' "$RANGE" --)
 
-# Also check commit bodies for BREAKING CHANGE
+# Also check commit bodies for BREAKING CHANGE / BREAKING-CHANGE
 if [[ "$BUMP" != "major" ]]; then
-  if git -C "$REPO_ROOT" log --format='%b' "$RANGE" -- | grep -q '^BREAKING CHANGE'; then
+  if git -C "$REPO_ROOT" log --format='%b' "$RANGE" -- | grep -Eq '^BREAKING( |-)CHANGE:?'; then
     BUMP="major"
   fi
 fi
