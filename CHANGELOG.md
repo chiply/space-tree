@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/chiply/space-tree/compare/v0.1.3...v0.1.4) (2026-02-23)
+
+
+### Bug Fixes
+
+* nil arg guards, autoload, internal naming, README version ([f9d0c39](https://github.com/chiply/space-tree/commit/f9d0c399097f9b9341317d7283e89a7d54ba7ed6))
+* paste-workspace inplace logic and error handling ([0ff1a45](https://github.com/chiply/space-tree/commit/0ff1a4517ff75a106e3d5de37aa4d74d5ab6c927))
+
 ## [0.1.3](https://github.com/chiply/space-tree/compare/v0.1.2...v0.1.3) (2026-02-23)
 
 
