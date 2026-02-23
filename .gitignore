@@ -3,6 +3,7 @@
 
 # Generated autoloads
 *-autoloads.el
+*-pkg.el
 
 # Eask artifacts
 .eask/
