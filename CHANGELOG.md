@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/chiply/space-tree/compare/v0.1.2...v0.1.3) (2026-02-23)
+
+
+### Bug Fixes
+
+* replace string-split with split-string for Emacs 28.1 compat ([4b17d74](https://github.com/chiply/space-tree/commit/4b17d74b5d6325dd9774aaf272bf026a7686d31a))
+* resolve lint issues and add MELPA recipe ([552fb1e](https://github.com/chiply/space-tree/commit/552fb1ed4710f60808ba9dd63860518fefcb8b76))
+
 ## [0.1.2](https://github.com/chiply/space-tree/compare/v0.1.1...v0.1.2) (2026-02-19)
 
 
