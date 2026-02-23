@@ -51,12 +51,10 @@ Otherwise, the first space will be numbered 1."
 ;;; State
 
 (defvar space-tree-tree (ht-create)
-  "A nested hashtable that represents the structural layout of the
-spaces in a hierarchy (aka a tree).")
+  "Nested hashtable representing the structural layout of spaces.")
 
 (defvar space-tree-current-address '()
-  "A list of numbers that represents the address of the current
-existing-space in space-tree-tree.")
+  "Address of the current space as a list of numbers.")
 
 (defvar space-tree-address-wconf-tbl (ht-create)
   "A hashtable that stores window configurations for each space.
@@ -72,7 +70,7 @@ The most recently visited existing-space is at the head of the list.")
 The keys are the addresses of the spaces and the values are the names.")
 
 (defvar space-tree-copied-space nil
-  "A variable to store copied window configurations.")
+  "Copied window configuration for pasting into another space.")
 
 
 ;;; Internal Utilities
@@ -91,13 +89,13 @@ The keys are the addresses of the spaces and the values are the names.")
   "Select a non-side window.
 If there are no non-side windows, an error is thrown."
   (when (space-tree--side-window-p)
-    (let ((num-windows (length (window-list))))
-      (dotimes (i num-windows)
-        (when (space-tree--side-window-p)
-          (progn
-            (other-window 1)
-            (when (not (space-tree--side-window-p))
-              (return)))))
+    (let ((num-windows (length (window-list)))
+          (found nil))
+      (dotimes (_i num-windows)
+        (unless found
+          (other-window 1)
+          (unless (space-tree--side-window-p)
+            (setq found t))))
       (when (space-tree--side-window-p) (error "No non-side windows found")))))
 
 (defun space-tree--delete-other-windows-and-switch-to-scratch ()
@@ -209,7 +207,7 @@ Return nil if the existing-space doesn't exist."
           space-tree-recent-space-list))))
 
 (defun space-tree--create-space-at (address)
-  "Add a existing-space to the space-tree at the ADDRESS."
+  "Add an existing space to the space-tree at ADDRESS."
   (space-tree--select-non-side-window)
   (space-tree--set address)
   (setq space-tree-current-address address)
@@ -247,23 +245,21 @@ SPACES-THIS-LEVEL-HT is the hashtable of spaces at this level."
 This is a critical UI element for space-tree, as it provides a visual
 indication of the current space in space-tree, which can grow to be quite
 large."
-  (setq modeline-string "")
-  (dotimes (i (space-tree--current-depth))
-    (let* ((parent-address (butlast space-tree-current-address (- (space-tree--current-depth) i)))
-           (selected-space-this-level (nth i space-tree-current-address))
-           (spaces-this-level-ht (space-tree--get parent-address))
-           ;; spaces-this-level-ht should be non-empty
-           ;; TODO -- the let vars can go into the helper function above
-           (modeline-string-this-node (space-tree--modeline-string-for-level
-                                       parent-address
-                                       selected-space-this-level
-                                       spaces-this-level-ht))
-           (modeline-string-to-this-level (concat
-                                           modeline-string
-                                           modeline-string-this-node
-                                           "| ")))
-      (setq modeline-string modeline-string-to-this-level)))
-  (concat "{ " (substring modeline-string 0 -2) "}"))
+  (let ((modeline-string ""))
+    (dotimes (i (space-tree--current-depth))
+      (let* ((parent-address (butlast space-tree-current-address (- (space-tree--current-depth) i)))
+             (selected-space-this-level (nth i space-tree-current-address))
+             (spaces-this-level-ht (space-tree--get parent-address))
+             (modeline-string-this-node (space-tree--modeline-string-for-level
+                                         parent-address
+                                         selected-space-this-level
+                                         spaces-this-level-ht))
+             (modeline-string-to-this-level (concat
+                                             modeline-string
+                                             modeline-string-this-node
+                                             "| ")))
+        (setq modeline-string modeline-string-to-this-level)))
+    (concat "{ " (substring modeline-string 0 -2) "}")))
 
 
 ;;; Public API
@@ -319,7 +315,7 @@ This is the workhorse for navigating the space-tree."
   (interactive)
   (let* ((parent (space-tree--current-parent))
          (tbl (space-tree--get parent))
-         (next-level-number (+ 1 (apply 'max (ht-keys tbl)))))
+         (next-level-number (+ 1 (apply #'max (ht-keys tbl)))))
     (space-tree--create-space-at (append parent `(,next-level-number)))))
 
 ;;;###autoload
@@ -327,7 +323,7 @@ This is the workhorse for navigating the space-tree."
   "Add a new space at the top level of the space-tree."
   (interactive)
   (space-tree--create-space-at
-   `(,(+ 1 (apply 'max (ht-keys (ht-get space-tree-tree "space-tree")))))))
+   `(,(+ 1 (apply #'max (ht-keys (ht-get space-tree-tree "space-tree")))))))
 
 ;;;###autoload
 (defun space-tree-delete-space (address)
