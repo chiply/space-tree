@@ -1,6 +1,9 @@
 # Byte-compiled files
 *.elc
 
+# Generated autoloads
+*-autoloads.el
+
 # Eask artifacts
 .eask/
 dist/

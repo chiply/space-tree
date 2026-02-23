@@ -358,14 +358,14 @@ table entries, current-address (last in list), and recent-space-list."
         ;; Name table cleared
         (should (= (ht-size space-tree-space-name-tbl) 0))))))
 
-;; space-tree-switch
+;; space-tree--switch
 
 (ert-deftest space-tree-test-switch/basic ()
   (space-tree-test-with-clean-state
     (space-tree-test-with-mock-windows
       (space-tree-test-build-tree '((1) (2)))
       (setq space-tree-current-address '(1))
-      (space-tree-switch '(2))
+      (space-tree--switch '(2))
       (should (equal space-tree-current-address '(2))))))
 
 (ert-deftest space-tree-test-switch/history-updated ()
@@ -374,7 +374,7 @@ table entries, current-address (last in list), and recent-space-list."
       (space-tree-test-build-tree '((1) (2)))
       (setq space-tree-current-address '(1))
       (setq space-tree-recent-space-list '((1)))
-      (space-tree-switch '(2))
+      (space-tree--switch '(2))
       (should (equal (car space-tree-recent-space-list) '(2))))))
 
 ;; space-tree-switch-or-create

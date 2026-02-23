@@ -243,6 +243,7 @@ SPACES-THIS-LEVEL-HT is the hashtable of spaces at this level."
    (sort (ht-keys spaces-this-level-ht) (lambda (a b) (< a b)))
    ""))
 
+;;;###autoload
 (defun space-tree-modeline-lighter ()
   "Return a string to be used as the modeline lighter for space-tree.
 This is a critical UI element for space-tree, as it provides a visual
@@ -280,11 +281,11 @@ large."
     (space-tree--create-space-at `(,first-space-number)))
   (force-mode-line-update))
 
-(defun space-tree-save-current-space ()
+(defun space-tree--save-current-space ()
   "Save the current window configuration in `space-tree-address-wconf-tbl'."
   (ht-set space-tree-address-wconf-tbl space-tree-current-address (window-state-get)))
 
-(defun space-tree-switch (address &optional no-update-wconf)
+(defun space-tree--switch (address &optional no-update-wconf)
   "Switch to the existing-space at the ADDRESS.
 If NO-UPDATE-WCONF is non-nil, don't update the window configuration."
   (space-tree--select-non-side-window)
@@ -302,13 +303,13 @@ This is the workhorse for navigating the space-tree."
   (let* ((existing-space (ht-get space-tree-address-wconf-tbl new-address))
          (space-tree-recent-space-address (space-tree--recent-space-on-path new-address)))
     ;; save the current window configuration, the one being switched from
-    (space-tree-save-current-space)
+    (space-tree--save-current-space)
     ;; switch to the new existing-space
     (cond
      ;; IF new-address hasn't been visited yet, THEN create it
      ((not existing-space) (space-tree--create-space-at new-address))
      ;; IF new-address points to a recent space or parent, THEN switch to it
-     (space-tree-recent-space-address (space-tree-switch space-tree-recent-space-address))))
+     (space-tree-recent-space-address (space-tree--switch space-tree-recent-space-address))))
   ;; update the modeline
   (force-mode-line-update))
 
@@ -340,7 +341,7 @@ the same level is selected."
           ((and (= 1 n-spaces) (= (space-tree--current-depth) 1))
            (error "Cannot delete the only space"))
           ((= 1 n-spaces)
-           (space-tree-switch (butlast address) t)
+           (space-tree--switch (butlast address) t)
            (space-tree--remove address)))))
 
 ;;;###autoload
@@ -410,7 +411,9 @@ Prompt the user to select from a list of named spaces."
 (defun space-tree-go-to-last-space ()
   "Switch to the most recently visited space."
   (interactive)
-  (space-tree-switch-or-create (nth 1 space-tree-recent-space-list)))
+  (if-let ((prev (nth 1 space-tree-recent-space-list)))
+      (space-tree-switch-or-create prev)
+    (user-error "No previous space")))
 
 ;;;###autoload
 (defun space-tree-go-right ()
@@ -452,7 +455,7 @@ Prompt the user to select from a list of named spaces."
 ;;;###autoload
 (defun space-tree-name-space-by-digit-arg (arg)
   "Name a space specified by digit ARG, prompting the user for a name."
-  (interactive "P")
+  (interactive "p")
   (let* ((arg-string (number-to-string arg))
          (address (if (string-match-p "0" arg-string)
                       (split-string arg-string "0")

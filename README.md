@@ -158,7 +158,7 @@ Each space stores its own window configuration, which is restored when you switc
 
 ## Dependencies
 
-- Emacs 29.1+
+- Emacs 28.1+
 - [ht](https://github.com/Wilfred/ht.el) (2.3+)
 - [dash](https://github.com/magnars/dash.el) (2.19+)
 
