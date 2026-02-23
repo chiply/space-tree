@@ -120,15 +120,6 @@ For example, (space-tree--list-starts-with \\='(1 2 3) \\='(1 2)) returns t."
           (setq result (cons x result))))
     (nreverse result)))
 
-(defun space-tree--win-buf-from-leaf (leaf)
-  "Extract the clone-of parameter and buffer from LEAF.
-LEAF is a window state structure."
-  (let ((params (assoc 'parameters leaf))
-        (buf (nth 1 (assoc 'buffer leaf))))
-    (list (cdr (assoc 'clone-of params))
-          buf)))
-
-
 ;;; Analyzing State
 
 (defun space-tree--recent-space-on-path (sublist)
@@ -161,30 +152,25 @@ If no such element exists, return nil."
 (defun space-tree--get (address)
   "Return the existing-space at the ADDRESS in the space-tree.
 Return nil if the existing-space doesn't exist."
-  (eval (append '(ht-get* space-tree-tree "space-tree") address)))
+  (apply #'ht-get* space-tree-tree "space-tree" address))
 
 (defun space-tree--get-parent-ht-at (address)
   "Return the parent of the existing-space at the ADDRESS."
-  ;; the filter accounts for the fact that the address may be 1 level,
-  ;; e.g. it may not have a parent
-  (eval (-filter
-         (lambda (x) x)
-         (append '(ht-get* space-tree-tree "space-tree") (butlast address)))))
+  (let ((parent-path (butlast address)))
+    (if parent-path
+        (apply #'ht-get* space-tree-tree "space-tree" parent-path)
+      (ht-get* space-tree-tree "space-tree"))))
 
 (defun space-tree--set (address)
   "Set the ADDRESS in the space-tree to a new hashtable."
-  (eval (append
-         '(ht-set)
-         `(,(space-tree--get-parent-ht-at address))
-         (last address)
-         `(,(ht-create)))))
+  (ht-set (space-tree--get-parent-ht-at address)
+          (car (last address))
+          (ht-create)))
 
 (defun space-tree--remove (address)
   "Remove the space at ADDRESS from the space-tree."
-  (eval (append ;; remove the space from space-tree-tree
-         '(ht-remove)
-         `(,(space-tree--get-parent-ht-at address))
-         (last address)))
+  (ht-remove (space-tree--get-parent-ht-at address)
+             (car (last address)))
   (ht-remove space-tree-space-name-tbl address)
   (ht-remove space-tree-address-wconf-tbl address)
   (setq
@@ -364,14 +350,14 @@ If no space has been copied, an error is raised."
 ;;;###autoload
 (defun space-tree-switch-current-level (arg)
   "Switch to the ith space at the current level of the space-tree.
-ARG specifies which space to switch to."
+ARG specifies which space to switch to.  When called without a
+prefix argument, prompts the user."
   (interactive "P")
-  (let ((n (when (not arg)
-             (string-to-number
-              (read-from-minibuffer "Switch to space: ")))))
-    (if n
-        (space-tree-switch-or-create (append (space-tree--current-parent) `(,n)))
-      (space-tree-switch-or-create (append (space-tree--current-parent) `(,arg))))))
+  (let ((n (if arg
+              (prefix-numeric-value arg)
+            (string-to-number
+             (read-from-minibuffer "Switch to space: ")))))
+    (space-tree-switch-or-create (append (space-tree--current-parent) `(,n)))))
 
 ;;;###autoload
 (defun space-tree-switch-space-by-digit-arg (arg)

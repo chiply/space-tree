@@ -8,6 +8,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ert)
 (require 'ht)
 (require 'dash)

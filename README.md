@@ -58,6 +58,9 @@ space-tree is a library for managing spaces (workspaces) in Emacs. It is inspire
 | `space-tree-go-to-last-space` | Switch to the most recently visited space |
 | `space-tree-switch-space-by-name` | Switch to a named space |
 | `space-tree-name-current-space` | Name the current space |
+| `space-tree-name-space-by-digit-arg` | Name a space specified by digit prefix arg |
+| `space-tree-switch-current-level` | Switch to a space at the current level by number |
+| `space-tree-switch-space-by-digit-arg` | Switch to a space using a digit-encoded address |
 | `space-tree-copy-workspace` | Copy the current workspace |
 | `space-tree-paste-workspace` | Paste the copied workspace |
 
