@@ -238,8 +238,7 @@ SPACES-THIS-LEVEL-HT is the hashtable of spaces at this level."
                (if (equal space-number level)
                    ;; need to change text to update modeline
                    (propertize (concat space-name-or-number "' ") 'face 'bold)
-                 (concat space-name-or-number " "))
-               )))
+                 (concat space-name-or-number " ")))))
    (sort (ht-keys spaces-this-level-ht) (lambda (a b) (< a b)))
    ""))
 
@@ -386,7 +385,7 @@ Digits are separated by 0 for multi-level addresses."
                       (split-string arg-string "0")
                     (-filter
                      (lambda (x) (> (length x) 0))
-                     (string-split arg-string ""))))
+                     (split-string arg-string ""))))
          (address (-map (lambda (x) (string-to-number x)) address)))
     (space-tree-switch-or-create address)))
 
@@ -460,7 +459,7 @@ Prompt the user to select from a list of named spaces."
                       (split-string arg-string "0")
                     (-filter
                      (lambda (x) (> (length x) 0))
-                     (string-split arg-string ""))))
+                     (split-string arg-string ""))))
          (address (-map (lambda (x) (string-to-number x)) address)))
     (ht-set space-tree-space-name-tbl address (completing-read "Name: " nil)))
   (force-mode-line-update))
