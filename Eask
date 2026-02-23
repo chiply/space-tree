@@ -22,4 +22,6 @@
 (depends-on "dash" "2.19")
 
 (development
- (depends-on "package-lint"))
+ (depends-on "package-lint")
+ (depends-on "elisp-lint")
+ (depends-on "relint"))
