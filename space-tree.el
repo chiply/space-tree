@@ -77,9 +77,12 @@ The keys are the addresses of the spaces and the values are the names.")
 
 (defun space-tree--window-state-put-safely (space)
   "Switch to workspace SPACE, ignoring `Selecting deleted buffer' error."
-  (let ((result (condition-case _ (window-state-put space) (error _))))
-    (when (string= "Selecting deleted buffer" (cadr result))
-      (message "Space contains deleted buffers"))))
+  (condition-case err
+      (window-state-put space)
+    (error
+     (if (string= "Selecting deleted buffer" (cadr err))
+         (message "Space contains deleted buffers")
+       (signal (car err) (cdr err))))))
 
 (defun space-tree--side-window-p ()
   "Return t if the current window is a side window, nil otherwise."
@@ -354,7 +357,7 @@ If INPLACE is nil, a new space is created and the copied space is pasted there.
 If no space has been copied, an error is raised."
   (interactive)
   (when (not space-tree-copied-space) (error "No copied space"))
-  (when inplace (space-tree-create-space-current-level))
+  (unless inplace (space-tree-create-space-current-level))
   (space-tree--window-state-put-safely space-tree-copied-space))
 
 ;;;###autoload
