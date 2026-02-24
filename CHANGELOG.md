@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/chiply/space-tree/compare/v0.1.4...v0.1.5) (2026-02-24)
+
+
+### Bug Fixes
+
+* revert to block-style release-please version markers ([69b5ceb](https://github.com/chiply/space-tree/commit/69b5ceb99c289c6f325ec4d0902b6ab86ddcd81d))
+
 ## [0.1.4](https://github.com/chiply/space-tree/compare/v0.1.3...v0.1.4) (2026-02-23)
 
 
