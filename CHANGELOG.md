@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/chiply/space-tree/compare/v0.1.6...v0.1.7) (2026-03-01)
+
+
+### Features
+
+* add convenience commands for level-based space switching ([1c9d95a](https://github.com/chiply/space-tree/commit/1c9d95a02a2b94304a6c525142109f5768f00b88))
+
 ## [0.1.6](https://github.com/chiply/space-tree/compare/v0.1.5...v0.1.6) (2026-03-01)
 
 
