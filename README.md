@@ -1,5 +1,8 @@
 # space-tree
 
+[![CI](https://github.com/chiply/space-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/chiply/space-tree/actions/workflows/ci.yml)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Tree-based workspace management for Emacs. Supports Emacs 28.1+.
 
 ## Overview
@@ -14,14 +17,16 @@ space-tree is a library for managing spaces (workspaces) in Emacs. It is inspire
 
 ## Installation
 
-### Using straight.el
+### With elpaca (use-package)
 
 ```elisp
-(straight-use-package
- '(space-tree :type git :host github :repo "chiply/space-tree"))
+(use-package space-tree
+  :ensure (:host github :repo "chiply/space-tree")
+  :config
+  (space-tree-init))
 ```
 
-### Using use-package with straight
+### With straight.el (use-package)
 
 ```elisp
 (use-package space-tree
@@ -30,11 +35,9 @@ space-tree is a library for managing spaces (workspaces) in Emacs. It is inspire
   (space-tree-init))
 ```
 
-### Manual Installation
+### Manual
 
-1. Clone the repository
-2. Add to your load-path
-3. Require the package
+Clone the repository and add it to your `load-path`:
 
 ```elisp
 (add-to-list 'load-path "/path/to/space-tree")
@@ -167,4 +170,4 @@ Each space stores its own window configuration, which is restored when you switc
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+GPL-3.0-or-later. See [LICENSE](LICENSE) for details.
