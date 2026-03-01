@@ -473,6 +473,38 @@ Prompt the user to select from a list of named spaces."
     (ht-set space-tree-space-name-tbl address (completing-read "Name: " nil)))
   (force-mode-line-update))
 
+
+;;; Convenience Commands
+
+(defmacro space-tree--def-level-commands (prefix doc-template count &rest address-body)
+  "Define COUNT interactive switch commands named PREFIX-1 through PREFIX-COUNT.
+DOC-TEMPLATE is a format string taking one integer arg for the docstring.
+ADDRESS-BODY are forms that compute the address list; the variable `n'
+is bound to the space number."
+  (declare (indent 3))
+  `(progn
+     ,@(mapcar
+        (lambda (i)
+          `(defun ,(intern (format "%s-%d" prefix i)) ()
+             ,(format doc-template i)
+             (interactive)
+             (let ((n ,i))
+               (space-tree-switch-or-create ,@address-body))))
+        (number-sequence 1 count))))
+
+(space-tree--def-level-commands "space-tree-to"
+    "Switch to top-level space %d." 9
+  (list n))
+
+(space-tree--def-level-commands "space-tree-sub"
+    "Switch to second-level space %d under the current top-level." 5
+  (list (nth 0 space-tree-current-address) n))
+
+(space-tree--def-level-commands "space-tree-sub-sub"
+    "Switch to third-level space %d under the current path." 5
+  (list (nth 0 space-tree-current-address)
+        (nth 1 space-tree-current-address) n))
+
 (provide 'space-tree)
 
 ;;; space-tree.el ends here
