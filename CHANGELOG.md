@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/chiply/space-tree/compare/v0.1.5...v0.1.6) (2026-03-01)
+
+
+### Bug Fixes
+
+* shorten docstrings to satisfy checkdoc and byte-compile width checks ([c9e543d](https://github.com/chiply/space-tree/commit/c9e543dc4511bdfe7d8f72f491decb3e4d81ee65))
+
 ## [0.1.5](https://github.com/chiply/space-tree/compare/v0.1.4...v0.1.5) (2026-02-24)
 
 
