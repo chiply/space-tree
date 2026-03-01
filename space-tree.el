@@ -128,8 +128,9 @@ This is a means of creating a clean slate, typically for a new space."
   (switch-to-buffer (get-buffer-create "*scratch*")))
 
 (defun space-tree--list-starts-with (lista listb)
-  "Return t if LISTA starts with LISTB, nil otherwise.
-For example, (space-tree--list-starts-with \\='(1 2 3) \\='(1 2)) returns t."
+  "Return t if LISTA start with LISTB, nil otherwise.
+For example, (space-tree--list-starts-with \\='(1 2 3) \\='(1 2))
+returns t."
   (equal (butlast lista (- (length lista) (length listb))) listb))
 
 (defun space-tree--remove-adjacent-duplicates (lst)
@@ -143,8 +144,8 @@ For example, (space-tree--list-starts-with \\='(1 2 3) \\='(1 2)) returns t."
 ;;; Analyzing State
 
 (defun space-tree--recent-space-on-path (sublist)
-  "Return the first element of `space-tree-recent-space-list' that begins with SUBLIST.
-If no such element exists, return nil."
+  "Return first element of `space-tree-recent-space-list' matching SUBLIST.
+If no element begins with SUBLIST, return nil."
   (let ((n (length sublist)))
     (car (-filter
           (lambda (x) (equal (butlast x (- (length x) n)) sublist))
@@ -202,7 +203,7 @@ Return nil if the existing-space doesn't exist."
   (force-mode-line-update))
 
 (defun space-tree--process-history ()
-  "Remove any sublist in `space-tree-recent-space-list' that is the prefix of another."
+  "Remove prefix sublists from `space-tree-recent-space-list'."
   (setq space-tree-recent-space-list
         (space-tree--remove-adjacent-duplicates
          (-remove
