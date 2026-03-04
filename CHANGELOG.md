@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/chiply/space-tree/compare/v0.1.7...v0.1.8) (2026-03-04)
+
+
+### Bug Fixes
+
+* install Nix before magic-nix-cache-action in CI ([426b0d5](https://github.com/chiply/space-tree/commit/426b0d558148fade6d8d7c62119f15f909597775))
+
 ## [0.1.7](https://github.com/chiply/space-tree/compare/v0.1.6...v0.1.7) (2026-03-01)
 
 
